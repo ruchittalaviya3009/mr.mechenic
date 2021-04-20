@@ -43,7 +43,7 @@ const getdata = (req,res) => {
                 res.send(err)
             }
             if(result) {
-                res.json(result)
+                res.json({infos:result})
             }
         })
     }

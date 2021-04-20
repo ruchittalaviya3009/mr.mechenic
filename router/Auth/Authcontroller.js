@@ -47,10 +47,14 @@ const login = async (req, res) => {
                     return res.status(400).send(error.details[0].message);
                 }
 
+                if ( await User.findOne( token != "")) {
+                    throw 'Username is already login';
+                }
+
                 //  Now find the user by their email address
                 let user = await User.findOne({ email: req.body.email });
                 if (!user) {
-                    return res.status(400).send('Incorrect email.');
+                    return res.status(400).send('Incorrect email or user does not exist.');
                 }
 
                 // Then validate the Credentials in MongoDB match
@@ -65,6 +69,7 @@ const login = async (req, res) => {
                     token
                 });
                 return User.updateOne({token:token},(err)=>{
+                    
                     if(err){
                      res.json({
                          error:"reset password link error" 
@@ -124,8 +129,8 @@ const password =(req,res)=>{
           let mailTransporter = nodemailer.createTransport({ 
               service: 'gmail',
               auth: { 
-                  user: 'ruchittalaviya309@gmail.com', 
-                  pass: '5788@Talaviya@309'
+                  user: 'mrmechenic59@gmail.com', 
+                  pass: 'mr.mechenic@2021'
               } 
           })
           return User.updateOne({resetlink:token},(err,success)=>{

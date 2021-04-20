@@ -15,6 +15,7 @@ const getdata=require('../Auth/getalldata')
 const alldata = require('../Auth/alldata')
 const searching = require('../Auth/searchalldata')
 const payment = require('../Auth/payment')
+const realtime = require('../Auth/realtime')
 
 router.use(express.json())
 router.use(cors())
@@ -22,7 +23,7 @@ router.use(cors())
 // router.get("/", (req, res) => {
 //     res.send({ response: "Server is up and running." }).status(200);
 //   });
-  
+router.post('/realtime',realtime.realtime)  
 router.post('/payment',payment.payment)
 router.post('/adata',alldata.getdata)
 const storage = multer.diskStorage({
@@ -86,6 +87,7 @@ router.put('/update',authecon.update,(req,res)=>
         .exist(req.body.email),  
   ] 
  )
+
 router.post('/sendmail',authecon.password)
 router.put('/reset-password',authecon.resetpassword)
 router.get("/search/:servicename",searchdata.searc);
