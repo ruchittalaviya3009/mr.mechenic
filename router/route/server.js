@@ -1,12 +1,13 @@
 const express = require('express');
 const app = express();
+// const config = require('config');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser')
 const router = require('../ru')
 const cors=require('cors')
 require("dotenv").config();
 const path=require('path')
-const authroute=require('../route/auth')
+const authroute = require('../route/auth')
 const http = require('http')
 const server = http.createServer(app)
 const socketio = require('socket.io')
@@ -56,6 +57,12 @@ io.on('connection',(socket) => {
       }
    })
 })
+
+
+// if (!config.get('PrivateKey')) {
+//    console.error('FATAL ERROR: PrivateKey is not defined.');
+//    process.exit(1);
+// }
 
 // Require static assets from public folder
 // app.use(express.static(path.join(__dirname, 'public')));

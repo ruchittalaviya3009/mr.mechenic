@@ -16,6 +16,7 @@ const alldata = require('../Auth/alldata')
 const searching = require('../Auth/searchalldata')
 const payment = require('../Auth/payment')
 const realtime = require('../Auth/realtime')
+const refer = require('../Auth/refer')
 
 router.use(express.json())
 router.use(cors())
@@ -23,9 +24,11 @@ router.use(cors())
 // router.get("/", (req, res) => {
 //     res.send({ response: "Server is up and running." }).status(200);
 //   });
+router.post('/refer',refer.refer)
 router.post('/realtime',realtime.realtime)  
 router.post('/payment',payment.payment)
 router.post('/adata',alldata.getdata)
+router.get('/alldata',getdata.getdata)
 const storage = multer.diskStorage({
     destination: 'public/upload/',
     filename: function (req, file, cb) {
@@ -69,10 +72,9 @@ router.post('/sservice',image1.array('service',10),service.register)
 router.post('/search',searching.search)
 router.post('/subtitle',subtitle.subtitiledata)
 router.post('/titledata',titledetails.detail)
-router.get('/alldata',getdata.getdata)
 router.post('/register',authecon.register)
 router.post('/login',authecon.login)
-router.put('/update',authecon.update,(req,res)=> 
+router.patch('/update',authecon.update,(req,res)=> 
   [
     req.body.check('firstname')
         .not()
@@ -88,6 +90,7 @@ router.put('/update',authecon.update,(req,res)=>
   ] 
  )
 
+ router.post('/logout',authecon.logout)
 router.post('/sendmail',authecon.password)
 router.put('/reset-password',authecon.resetpassword)
 router.get("/search/:servicename",searchdata.searc);
@@ -121,7 +124,7 @@ router.post('/serviceregister',servicecon.register,(req,res)=>
  ] 
 )
 router.post('/servicelogin',servicecon.login)
-router.put('/update',servicecon.update,(req,res)=>
+router.post('/serviceupdate',servicecon.update,(req,res)=>
   [
     req.body.check('firmname')
         .not()

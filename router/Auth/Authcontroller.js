@@ -7,6 +7,8 @@ const jwt=require('jsonwebtoken')
 const nodemailer = require('nodemailer'); 
 const user = require('../data/User');
 const { _extend } = require('util')
+const { cookie } = require('express-validator')
+// const config = require('config');
 
 router.use(express.json())
 
@@ -47,9 +49,9 @@ const login = async (req, res) => {
                     return res.status(400).send(error.details[0].message);
                 }
 
-                if ( await User.findOne( token != "")) {
-                    throw 'Username is already login';
-                }
+                // if ( await User.findOne( token != "")) {
+                //     throw 'Username is already login';
+                // }
 
                 //  Now find the user by their email address
                 let user = await User.findOne({ email: req.body.email });
@@ -63,52 +65,90 @@ const login = async (req, res) => {
                 if (!validPassword) {
                     return res.status(400).send('Incorrect  password.');
                 }
-                const token = jwt.sign({ _id: user._id }, 'PrivateKey');
-                res.json({
-                    message:"login Successfull!",
-                    token
-                });
-                return User.updateOne({token:token},(err)=>{
+                if(cookie.authcon !== null){
+                    const token = jwt.sign({ _id: user._id }, 'PrivateKey');
+                res.cookie('authtoken',token).status(200).json({
+                    success: true,
+                    message: 'Successfully Logged In!'
+                })
+                }
+                
+                // res.header('x-auth-token', token).send(_.pick(user, ['_id', 'name', 'email']));
+                // res.json({
+                //     message:"login Successfull!",
+                //     token
+                // });
+        //         return User.updateOne({token:token},(err)=>{
                     
-                    if(err){
-                     res.json({
-                         error:"reset password link error" 
-                     })
-                    }
-         })
+        //             if(err){
+        //              res.json({
+        //                  error:"reset password link error" 
+        //              })
+        //             }
+        //  })
     }
 
  const update=(req,res)=>{
-    bcrypt.hash(req.body.password, 10,(hashedPass)=>{
-    let newupdate={
-                firstname: req.body.firstname,
-                lastname: req.body.lastname,
-                email: req.body.email,
-                password: hashedPass
-         };  
-    const username=req.body.email 
-    const find=User.findOne({$or: [{email:username}]})
-             if(find){
-                User.updateOne(find,{$set:newupdate},(err,find)=>{
-                    if(err){
-                        return  res.json({
-                            Error:'An error ocured!'
+    bcrypt.hash(req.body.password, 10,(err,hashedPass)=>{
+        let newupdate={
+                        firstname: req.body.firstname,
+                        lastname: req.body.lastname,
+                        email: req.body.email,
+                        password: hashedPass
+             };  
+        const username=req.body.email 
+        const find=User.findOne({$or: [{email:username}]})
+                 if(find){
+                    User.updateOne(find,{$set:newupdate},(err,find)=>{
+                        if(err){
+                            return  res.json({
+                                Error:'An error ocured!'
+                                })
+                        }else{
+                            res.json({
+                                message:'Data Updated successfully!'
                             })
-                    }else{
-                        res.json({
-                            message:'User Updated successfully!'
-                        })
-                    }
-                })
-        }
-         if(!req.body.email|| req.body.email.length<3)
-            {
-                res.status(400).send('Email should be required and should be greater than 3 ');
-                return;
+                        }
+                    })
             }
+             if(!req.body.email|| req.body.email.length<3)
+                {
+                    res.status(400).send('Email should be required and should be greater than 3 ');
+                    return;
+                }
+            
+        })
+    }
+    // bcrypt.hash(req.body.password , 10 ,(hashedPass)=>{
+    // let newupdate={
+    //             firstname: req.body.firstname,
+    //             lastname: req.body.lastname,
+    //             email: req.body.email,
+    //             password: hashedPass
+    //      };  
+    // const username=req.body.email 
+    // const find=User.findOne({$or: [{email:username}]})
+    //          if(find){
+    //             User.updateOne(find,{$set:newupdate},(err,find)=>{
+    //                 if(err){
+    //                     return  res.json({
+    //                         Error:'An error ocured!'
+    //                         })
+    //                 }else{
+    //                     res.json({
+    //                         message:'User Updated successfully!'
+    //                     })
+    //                 }
+    //             })
+    //     }
+    //      if(!req.body.email|| req.body.email.length<3)
+    //         {
+    //             res.status(400).send('Email should be required and should be greater than 3 ');
+    //             return;
+    //         }
         
-    })
-}
+    // })
+// }
  
 const password =(req,res)=>{
     const {email} =req.body;
@@ -124,7 +164,7 @@ const password =(req,res)=>{
              from:'Mr.mrchrnic@gmail.com',
              to:email,
              subject:'Reset password link',
-             html:`<a href='#'><p>Please click on given link to reset your password</a></p>`
+             html:`<p>Please <a href='#'>click here</a> for reset your password</p>`
          }
           let mailTransporter = nodemailer.createTransport({ 
               service: 'gmail',
@@ -193,18 +233,14 @@ const resetpassword = (req,res) => {
     }
     }
 
-    const logout = (req,res) => {
-        const obj={
-            token:''
-         }
-         user = _extend(user,obj)
-         user.save((err,result)=>{
-            if(err){
-                 res.json({
-                    error:"Logout"
-                })
-            }
-    })
-}
+    const logout = (req, res) => {
+        User.findByIdAndUpdate(
+        { _id: req.user._id }
+        , { token: '' },
+        (err) => {
+        if (err) return res.json({ success : false, err })
+        return res.status(200).send({ success: true, message: 'Successfully Logged Out!' });
+       })
+       }
      
-    module.exports={register,login,update,password,resetpassword}
+    module.exports={register,login,update,password,resetpassword,logout}

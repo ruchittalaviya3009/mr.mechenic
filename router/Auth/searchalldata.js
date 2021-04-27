@@ -45,7 +45,7 @@ const search = (req,res) => {
                 res.send(err)
             }
             if(result) {
-                res.send(result)
+                res.json({infors:result})
             }
         })
     }

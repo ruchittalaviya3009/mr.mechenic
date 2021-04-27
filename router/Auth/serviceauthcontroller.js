@@ -75,10 +75,10 @@ const register = (req,res,next) => {
     bcrypt.hash(req.body.password, 10,(err,hashedPass)=>{
     let newupdate={
             firmname:req.body.firmname,
-            ownername:req.body.owenername,
+            ownername:req.body.ownername,
             email:req.body.email,
             servicetype:req.body.servicetype,
-            password:hashedPass,
+            password:hashedPass
          };  
     const username=req.body.email 
     const find=User.findOne({$or: [{email:username}]})

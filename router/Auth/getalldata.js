@@ -1,8 +1,7 @@
 const { result } = require('lodash');
 const servicedatas = require('../data/servicedata')
 
-
-const getdata = (req,res) => {
+exports.getdata = (req,res) => {
     let matchObj = {};
 
     if (req.body.service_id) {
@@ -49,7 +48,7 @@ const getdata = (req,res) => {
         })
     }
 
-module.exports = {getdata}
+// module.exports = {getdata}
 
 
 
