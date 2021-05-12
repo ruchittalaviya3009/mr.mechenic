@@ -22,7 +22,7 @@ const pay = require('../Auth/pay')
 const tdata = require('../Auth/title')
 
 
-// app.set('view engine', pug);
+router.set('view engine', pug);
 router.use(express.json())
 router.use(cors())
 

@@ -1,24 +1,24 @@
-// const {mongoose} = require('./../config/mongoose');
+const {mongoose} = require('mongoose');
 
-// const donorSchema = new mongoose.Schema({
-//     full_name: {
-//         type: String, 
-//         required: true,
-//     },
-//     email: {
-//         type: String, 
-//         required: true,
-//     },
-//     amount: {
-//         type: Number, 
-//         required: true,
-//     },
-//     reference: {
-//         type: String, 
-//         required: true
-//     }
-// });
+const donorSchema = new mongoose.Schema({
+    full_name: {
+        type: String, 
+        required: true,
+    },
+    email: {
+        type: String, 
+        required: true,
+    },
+    amount: {
+        type: Number, 
+        required: true,
+    },
+    reference: {
+        type: String, 
+        required: true
+    }
+});
 
-// const Donor = mongoose.model('Donor', donorSchema);
+const Donor = mongoose.model('Donor', donorSchema);
 
-// module.exports = {Donor}
+module.exports = {Donor}
