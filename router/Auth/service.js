@@ -20,5 +20,5 @@ const register = (req, res) => {
       res.status(200).json("Service Added successfully!");
     }
   
-
+    
 module.exports={register}

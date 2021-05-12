@@ -164,7 +164,7 @@ const password =(req,res)=>{
              from:'Mr.mrchrnic@gmail.com',
              to:email,
              subject:'Reset password link',
-             html:`<p>Please <a href='#'>click here</a> for reset your password</p>`
+             html:`<h3>Please <a href='http://localhost:3000/password'>click here</a> for reset your password</h3>`
          }
           let mailTransporter = nodemailer.createTransport({ 
               service: 'gmail',

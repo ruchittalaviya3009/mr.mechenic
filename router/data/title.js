@@ -8,9 +8,9 @@ let ruchit = new mongoose.Schema({
   });
   
   let ruchit1 = new mongoose.Schema({
-    i4: { type: String, required: true},
-    i5:{ type: String, required: true},
-    i6:{ type: String, required: true}
+    i1: { type: String, required: true},
+    i2:{ type: String, required: true},
+    i3:{ type: String, required: true}
   });
 const deta =new sch({
     service_details_id:{
@@ -28,5 +28,5 @@ const deta =new sch({
      
 }, {timestamp:true}) 
 
-const servicedetails = mongoose.model('titledetailes',deta)
+const servicedetails = mongoose.model('title',deta)
 module.exports = servicedetails;

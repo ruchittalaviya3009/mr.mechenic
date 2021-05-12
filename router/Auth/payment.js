@@ -1,5 +1,6 @@
 const stripe = require('stripe')("sk_test_51IfMJBSHGvNtdk3QLJAdg9jAJKRAusukiNuyPV1VWdD8rBaZA1UM6mNzdzahKXSFq1GMUrhy3V6H6ofOFZprv4HC00x6Ccg8Pa")
 const uuid = require('uuid')
+const paymentdata = require('../data/paymentdata')
 
 /*
 const payment = (req , res) => {
@@ -39,7 +40,7 @@ const payment = (req , res) => {
             email,
             amount,
             currency : 'INR',
-            description: 'Spatula company',
+            description: 'Mr.mechenic company',
             payment_method: id,
             confirm :true
         })
@@ -47,6 +48,7 @@ const payment = (req , res) => {
         res.json({
             message:"payment successfull"
         })
+        pay.save()
     } catch (error) {
         console.log("Error",error);
         res.json({

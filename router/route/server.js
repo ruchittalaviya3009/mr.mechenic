@@ -11,6 +11,7 @@ const authroute = require('../route/auth')
 const http = require('http')
 const server = http.createServer(app)
 const socketio = require('socket.io')
+
 const io = socketio(server, {
    cors: {
      origin: "*",
@@ -22,9 +23,47 @@ const {adduser,removeuser,getuser,getusersinroom} = require('../Auth/users')
 router.use(cors())
 app.use(authroute);
 
+mongoose.connect("mongodb://localhost/ruchit", {useNewUrlParser:true}, { useUnifiedTopology: true } )
+const con=mongoose.connection;
+con.on('open',(req,res)=>{
+console.log("connect");
+});
+
+const { chat } = require('../data/chat')
+
+// io.on("connection", socket => {
+
+//    socket.on("Input Chat Message", msg => {
+ 
+//      connect.then(db => {
+//        try {
+//            let chat = new Chat({ message: msg.chatMessage, sender:msg.userID, type: msg.type })
+ 
+//            chat.save((err, doc) => {
+//              if(err) return res.json({ success: false, err })
+ 
+//              Chat.find({ "_id": doc._id })
+//              .populate("sender")
+//              .exec((err, doc)=> {
+ 
+//                  return io.emit("Output Chat Message", doc);
+//              })
+//            })
+//        } catch (error) {
+//          console.error(error);
+//        }
+//      })
+//     })
+ 
+//  })
+ 
+
 io.on('connection',(socket) => {
-   console.log('we have new connsectiion')
-   
+   console.log('we have new connction')
+   chat.find({},function(err,doc){
+     if(err) throw err;
+     socket.emit('load old msg',doc)
+   })
    socket.on('join',({name,room},cb) => {
       const { error , user } = adduser({ id : socket.id , name ,room })
        if(error) {
@@ -45,7 +84,14 @@ io.on('connection',(socket) => {
         
       io.to(user.room).emit('message' , { user : user.name , text : message})
       io.to(user.room).emit('roomdata' , { room : user.room , users : getusersinroom(user.room)})
-
+        var chatdata = new chat({
+          msg:message,
+          room:user.room
+        })
+        chatdata.save(function(err){
+          io.to(user.room).emit('message' , { user : user.name , text : message})
+          io.to(user.room).emit('roomdata' , { room : user.room , users : getusersinroom(user.room)})
+        })
       cb();
    })
 
@@ -84,12 +130,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }))
 
 app.use('Authuploads/', express.static('Authuploads'));
-
- mongoose.connect("mongodb://localhost/ruchit", {useNewUrlParser:true}, { useUnifiedTopology: true } )
-    const con=mongoose.connection;
-    con.on('open',(req,res)=>{
-    console.log("connect");
-});
 
 // const rurouter = require('../ru')
 app.use('/ru',authroute)

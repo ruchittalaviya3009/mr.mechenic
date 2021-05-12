@@ -22,7 +22,7 @@ exports.getdata = (req,res) => {
                 $unwind: "$service_details"
               }, {
                 $lookup: {
-                  from: "titledetailes",
+                  from: "titles",
                   localField: "service_details._id",
                   foreignField: "service_details_id",
                   as: "service_sub_details"
@@ -35,7 +35,8 @@ exports.getdata = (req,res) => {
                   dataimg: 1,
                   price: 1,
                   servicetype: "$service_details.servicetype",
-                  information: "$service_sub_details.information"
+                  information: "$service_sub_details.information",
+                  information1: "$service_sub_details.information1"
                 }
               }
         ]).exec((err,result)=>{

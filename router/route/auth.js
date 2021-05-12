@@ -1,4 +1,5 @@
 const express=require('express')
+const pug = require('pug');
 const User=require('../data/User')
 const authecon =require('../Auth/Authcontroller')
 const servicecon=require('../Auth/serviceauthcontroller')
@@ -17,10 +18,15 @@ const searching = require('../Auth/searchalldata')
 const payment = require('../Auth/payment')
 const realtime = require('../Auth/realtime')
 const refer = require('../Auth/refer')
+const pay = require('../Auth/pay')
+const tdata = require('../Auth/title')
 
+
+// app.set('view engine', pug);
 router.use(express.json())
 router.use(cors())
 
+router.post('/tdata',tdata.tdetail)
 // router.get("/", (req, res) => {
 //     res.send({ response: "Server is up and running." }).status(200);
 //   });
@@ -93,6 +99,14 @@ router.patch('/update',authecon.update,(req,res)=>
  router.post('/logout',authecon.logout)
 router.post('/sendmail',authecon.password)
 router.put('/reset-password',authecon.resetpassword)
+
+// payment route
+router.post('/paystack/pay',pay.pay)
+router.post('/paystack/callback',pay.callback)
+router.post('/receipt/:id',pay.receipt)
+router.post('/error',pay.error)
+router.post('/index',pay.index)
+
 router.get("/search/:servicename",searchdata.searc);
 
 // service provider

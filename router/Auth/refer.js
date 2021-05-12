@@ -6,7 +6,7 @@ const refer =(req,res)=>{
              from:'Mr.mrchrnic@gmail.com',
              to:email,
              subject:'Invite your freiend  link',
-             html:`<p>Your friend invite you to <a href='#'>join</a> the Mr.mechenic</p>`
+             html:`<h3>Your friend invite you to <a href='#'>join</a> the Mr.mechenic</h3>`
          }
           let mailTransporter = nodemailer.createTransport({ 
               service: 'gmail',
