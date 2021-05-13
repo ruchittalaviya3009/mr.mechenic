@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-const sch=mongoose.Schema
+const sch = mongoose.Schema
 
 let ruchit = new mongoose.Schema({
     i1: { type: String, required: true},
@@ -19,7 +19,6 @@ const deta =new sch({
     },
     information:{
         type:[ruchit],
-        // type:[ruchit1]
     },
     information1:{
         type:[ruchit1] 
